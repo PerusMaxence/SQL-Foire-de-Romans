@@ -1,0 +1,72 @@
+CREATE TABLE CLIENT
+(Code_cli varchar(5),
+ Nom_ent_cli varchar(255),
+ Code_postal_cli varchar(5),
+ Rue_cli varchar(255),
+ Ville_cli varchar(255),
+ No_tel_cli varchar(14),
+ constraint PK_CLIENT primary key (Code_cli)
+);
+
+CREATE TABLE ANIMATION
+(ID_anim varchar(5),
+ Nom_anim varchar(255),
+ Duree_anim varchar(5),
+ constraint PK_ANIMATION primary key (ID_anim) 
+);
+
+CREATE TABLE REPRESENTATION
+(ID_repre varchar(5),
+ Date_repre date,
+ Heure_deb_repre varchar(5),
+ ID_anim varchar(5),
+ constraint PK_REPRESENTATION primary key (ID_repre),
+ constraint FK_REPRESENTATION_ANIMATION foreign key (ID_anim) REFERENCES ANIMATION(ID_anim)
+);
+
+CREATE TABLE LANGUE
+(Code_Lang varchar(3),
+ Libelle_lang varchar(255),
+ constraint PK_LANGUE primary key (Code_Lang)
+);
+
+CREATE TABLE ESPACE
+(ID_espace varchar(5),
+ Spe_espace varchar(100),
+ constraint PK_ESPACE primary key (ID_espace)
+);
+
+CREATE TABLE BOX
+(No_box int,
+ Sup_box decimal(5,2),
+ Puiss_box_A decimal(4,1),
+ Pt_eau_box boolean,
+ Code_cli varchar(5),
+ ID_espace varchar(5),
+ constraint PK_BOX primary key (No_box),
+ constraint FK_BOX_CLIENT foreign key (Code_cli) REFERENCES CLIENT(Code_cli),
+ constraint FK_BOX_ESPACE foreign key (ID_espace) REFERENCES ESPACE(ID_espace)
+);
+
+CREATE TABLE HOTESSE
+(Badge_hot varchar(5),
+ Nom_hot varchar(50),
+ Prénom_hot varchar(50),
+ ID_espace varchar(5),
+ constraint PK_HOTESSE primary key (Badge_hot),
+ constraint FK_HOTESSE_ESPACE foreign key (ID_espace) REFERENCES ESPACE(ID_espace)
+);
+
+CREATE TABLE PARLER
+(Code_Lang varchar(3),
+ Badge_hot varchar(5),
+ constraint FK_PARLER_LANGUE foreign key (Code_Lang) REFERENCES LANGUE(Code_Lang),
+ constraint FK_PARLER_HOTESSE foreign key (Badge_hot) REFERENCES HOTESSE(Badge_hot)
+);
+
+CREATE TABLE ENCADRER
+(Badge_hot varchar(5),
+ ID_repre varchar(5),
+ constraint FK_ENCADRER_HOTESSE foreign key (Badge_hot) REFERENCES HOTESSE(Badge_hot),
+ constraint FK_ENCADRER_REPRESENTATION foreign key (ID_repre) REFERENCES REPRESENTATION(ID_repre)
+);
